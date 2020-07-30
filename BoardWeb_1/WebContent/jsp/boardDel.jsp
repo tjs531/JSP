@@ -46,7 +46,7 @@ public Connection getCon() throws Exception {
 			response.sendRedirect("/jsp/boardDetail.jsp?err=-1&i_board=" + i_board);			//결과를 띄우지 않고 바로 페이지 이동. 결과를 띄우고싶으면(alert 등..) javascript 이용해야함.
 			break;
 		case 0:
-			response.sendRedirect("/jsp/boardDetail.jsp?err=0&i_board=" + i_board);
+			response.sendRedirect("/jsp/boardDetail.jsp?err=0&i_board=" + i_board);				//쿼리 스트링에 빈칸 있으면 안됨!
 			break;
 		case 1:
 			response.sendRedirect("/jsp/boardlist.jsp");
