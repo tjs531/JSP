@@ -32,5 +32,4 @@ public class BoardVO {
 		this.i_student = i_student;
 	}
 	
-	
 }
