@@ -40,7 +40,7 @@
 		rs = ps.executeQuery();						//완성된 쿼리문 실행
 		
 		
-		while(rs.next()){							//0줄일수도 있으니까 while이나 if(rs.next()){} 의 조건으로 확인을 해줘야 에러가 안터짐.(여러줄일때는 while을 써야 여러줄 다 받아옴)
+		if(rs.next()){							//0줄일수도 있으니까 while이나 if(rs.next()){} 의 조건으로 확인을 해줘야 에러가 안터짐.(여러줄일때는 while을 써야 여러줄 다 받아옴)
 			String title = rs.getNString("title");	//getString과 똑같지만 getString은 에러날 가능성이 아주야아아악간 있다(톰캣에서 어떤 기능을 끄면...). getNString은 안전.
 			String ctnt = rs.getNString("ctnt");	
 			int i_student = rs.getInt("i_student");
@@ -68,7 +68,7 @@
 </head>
 <body>
 	<div>											<!-- html에서 on으로 시작하는건 이벤트.onsubmit="return false" 하면 값이 전송되지 않음. 다른거 쓰면 다 전송됨. 그냥 chk()적으면 안되고 return chk() 써야 함.(onsubmit함수가 return해줘야 함)-->
-		<form id="frm" action="/jsp/boardWriteProc.jsp" method="post" onsubmit="return chk()">				<!-- post로 보내면 주소창에 정보가 나타나지 않고 정보를 캡슐화 해서 전달. (주소창에는 /jsp/boardWriteProc.jsp 까지만 나타남-->
+		<form id="frm" action="/jsp/boardModProc.jsp?i_board=<%=i_board %>" method="post" onsubmit="return chk()">				<!-- post로 보내면 주소창에 정보가 나타나지 않고 정보를 캡슐화 해서 전달. (주소창에는 /jsp/boardWriteProc.jsp 까지만 나타남-->
 			<div><label>제목: <input type="text" name="title" value=<%=vo.getTitle()%> ></label></div>
 			<div><label>내용: <textarea name="ctnt"><%=vo.getCtnt()%></textarea></label></div>
 			<div><label>작성자: <input type="text" name="i_student" value = <%=vo.getI_student()%>></label></div>

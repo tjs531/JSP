@@ -28,7 +28,7 @@
 <body>
 	<div id="msg"><%=msg %></div>
 	<div>											<!-- html에서 on으로 시작하는건 이벤트.onsubmit="return false" 하면 값이 전송되지 않음. 다른거 쓰면 다 전송됨. 그냥 chk()적으면 안되고 return chk() 써야 함.(onsubmit함수가 return해줘야 함)-->
-		<form id="frm" action="/jsp/boardWriteProc.jsp" method="post" onsubmit="return chk()">				<!-- post로 보내면 주소창에 정보가 나타나지 않고 정보를 캡슐화 해서 전달. (주소창에는 /jsp/boardWriteProc.jsp 까지만 나타남-->
+		<form id="frm" action="/jsp/boardWriteProc.jsp?" method="post" onsubmit="return chk()">				<!-- post로 보내면 주소창에 정보가 나타나지 않고 정보를 캡슐화 해서 전달. (주소창에는 /jsp/boardWriteProc.jsp 까지만 나타남-->
 			<div><label>제목: <input type="text" name="title"></label></div>
 			<div><label>내용: <textarea name="ctnt"></textarea></label></div>
 			<div><label>작성자: <input type="text" name="i_student"></label></div>

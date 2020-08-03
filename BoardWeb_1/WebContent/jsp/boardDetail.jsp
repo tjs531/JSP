@@ -82,20 +82,38 @@
 <meta charset="UTF-8">
 <title>상세페이지</title>
 <style>
-	table {border-collapse:collapse;}
-	th, td{text-align:center; border: 1px solid black; width: 100px; height: 50px; }	
+	.container { width: 500px; margin: 50px auto; text-align: center;}
+	.title {height: 50px; text-align : center;}
+	.student {height: 50px; text-align : center;}
+	.content { height: 300px; text-align : center;}
+	table { border:1px solid black; border-collapse : collapse; width: 400px;}
+	th {border: 1px solid black; width: 100px;}
+	td {border: 1px solid black; width: 400px;}]
 </style>
 </head>
 <body>
+	
+	<div class="container">
+	<table>
+	
+	<tr class= "title">
+	<th>제목</th>
+	<td><%=vo.getTitle() %></td>
+	</tr>
+	<tr class="student">
+	<th>작성자</th>
+	<td><%=vo.getI_student()%></td>
+	</tr>
+	<tr class="content">
+	<th>내용</th>
+	<td><%=vo.getCtnt()%></td>
+	</table>
+
 	<div><a href="/jsp/boardlist.jsp">리스트로 가기</a>
 		<a href="#" onclick="procDel(<%=i_board%>)">삭제</a>
 		<a href="/jsp/boardMod.jsp?i_board=<%=i_board%>">수정</a>
-		</div>
-
-	<div>제목 : <%=vo.getTitle() %></div>
-	<div>내용 : <%=vo.getCtnt()%></div>
-	<div>작성자 : <%=vo.getI_student()%></div>
-	
+	</div>
+	</div>
 	<script>
 		function procDel(i_board){
 			//alert('i_board : ' + i_board);
