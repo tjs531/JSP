@@ -3,7 +3,7 @@
 <%@ page import = "java.sql.*" %>
     
 <%!	
-int dn=-1;
+
 String m;
 public Connection getCon() throws Exception {
 	String url = "jdbc:oracle:thin:@localhost:1521:orcl";
@@ -26,12 +26,14 @@ public Connection getCon() throws Exception {
 	Connection con = null;
 	PreparedStatement ps = null;
 	
+	int result=-1;
+	
 	try{
 		con = getCon();
 		ps = con.prepareStatement(sql);				
 		ps.setInt(1,i_board);			
 		
-		dn = ps.executeUpdate();
+		result = ps.executeUpdate();
 	}catch(Exception e){
 		e.printStackTrace();
 	} finally {			
@@ -39,9 +41,9 @@ public Connection getCon() throws Exception {
 		if(con!=null) { try{ con.close(); }catch(Exception e){} }
 	}
 	
-	System.out.println("result : " + dn);
+	System.out.println("result : " + result);
 	
-	switch(dn){
+	switch(result){
 		case -1:
 			response.sendRedirect("/jsp/boardDetail.jsp?err=-1&i_board=" + i_board);			//결과를 띄우지 않고 바로 페이지 이동. 결과를 띄우고싶으면(alert 등..) javascript 이용해야함.
 			break;
@@ -60,6 +62,6 @@ public Connection getCon() throws Exception {
 <title>Insert title here</title>
 </head>
 <body>
-	<div><%=dn%>개의 값이 삭제되었습니다.</div>
+	<div><%=result%>개의 값이 삭제되었습니다.</div>
 </body>
 </html>

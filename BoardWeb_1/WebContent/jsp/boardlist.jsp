@@ -26,7 +26,7 @@
 	List<BoardVO> boardList = new ArrayList();
 	
 	
-	String sql = " SELECT i_board, title FROM t_board ";			//쿼리문 양쪽에 빈칸 주는게 좋음.(쿼리문은 띄어쓰기 중요) 
+	String sql = " SELECT i_board, title FROM t_board ORDER BY i_board DESC";			//쿼리문 양쪽에 빈칸 주는게 좋음.(쿼리문은 띄어쓰기 중요) 
 																	//쿼리문 안에 ';'은  허용하면 안됨. 허용하면 인젝션 공격(쿼리문 삽입해서 공격) 가능해짐. ;붙이면 실행 안되게 만들어짐. 
 
 	try {
