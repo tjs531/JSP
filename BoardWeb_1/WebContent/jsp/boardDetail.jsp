@@ -88,7 +88,7 @@
 	.content { height: 300px; text-align : center;}
 	table { border:1px solid black; border-collapse : collapse; width: 400px;}
 	th {border: 1px solid black; width: 100px;}
-	td {border: 1px solid black; width: 400px;}]
+	td {border: 1px solid black; width: 400px;}
 </style>
 </head>
 <body>
