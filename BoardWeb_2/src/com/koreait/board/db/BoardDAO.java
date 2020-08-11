@@ -79,25 +79,47 @@ public class BoardDAO {
 		return vo;
 	}
 	
-	public static void wriBoard(BoardVo param){
-		BoardVo vo = null;
+	public static int insBoard(BoardVo param){
 		Connection con = null;
 		PreparedStatement ps = null;
 		
-		String sql = "insert into t_board(i_board, title, ctnt, i_student) select nvl(max(i_board),0)+1,?,?,? from t_board";
-		
+		String sql = "insert into t_board(i_board, title, ctnt, i_student) values (seq_board.nextval,?,?,?)";
+		int result =0;															//sequence 생성하고 사용. (숫자가 1씩 증가) 
+
 		try {
 			con = DbCon.getCon();
 			ps = con.prepareStatement(sql);
 			ps.setNString(1,param.getTitle());			
 			ps.setNString(2,param.getCtnt());	
 			ps.setInt(3,param.getI_student());
-			ps.executeUpdate();
+			result = ps.executeUpdate();
 		} catch(Exception e) {
 			e.printStackTrace();
 		} finally {
 			DbCon.close(con, ps);
 		}
 		
+		return result;
+	}
+	
+	public static int delBoard(int i_board){
+		Connection con = null;
+		PreparedStatement ps = null;
+		int result = 0;
+		
+		String sql = "delete from t_board where i_board=?";
+
+		try {
+			con = DbCon.getCon();
+			ps = con.prepareStatement(sql);
+			ps.setInt(1,i_board); 
+			result = ps.executeUpdate();
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			DbCon.close(con, ps);
+		}
+		
+		return result;
 	}
 }

@@ -9,6 +9,7 @@
 <body>
 	<div>										
 		<form id="frm" action="/boardWrite" method="post" onsubmit="return chk()">	
+		<div>${msg}</div>
 			<div><label>제목: <input type="text" name="title"></label></div>
 			<div><label>내용: <textarea name="ctnt"></textarea></label></div>
 			<div><label>작성자: <input type="text" name="i_student"></label></div>
@@ -26,7 +27,6 @@
 		}
 		
 		function chk() {
-	
 			if(eleValid(frm.title,'제목')) {
 				return false;
 			}else if(eleValid(frm.ctnt,'내용')){
@@ -34,9 +34,7 @@
 			}else if(eleValid(frm.i_student,'작성자')){
 				return false;
 			}
-	
 		}
-		
 	</script>
 </body>
 </html>

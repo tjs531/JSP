@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.koreait.board.db.BoardDAO;
+import com.koreait.board.db.DbCon;
 import com.koreait.board.vo.BoardVo;
 
 @WebServlet("/boardWrite")
@@ -28,8 +29,15 @@ public class BoardWriteSer extends HttpServlet {
 		param.setCtnt(ctnt);
 		param.setI_student(Integer.parseInt(i_student));
 		
-		BoardDAO.wriBoard(param);
+		int result = BoardDAO.insBoard(param);
+		System.out.println("result : " + result);
 		
-		response.sendRedirect("/boardList");
+		if(result == 1) { 	//정상
+			response.sendRedirect("/boardList");
+		}else {
+			request.setAttribute("msg", "에러가 발생했습니다.");
+			doGet(request, response);
+		}
+		
 	}
 }

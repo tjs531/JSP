@@ -13,6 +13,7 @@
 	td {border: 1px solid black; width: 400px;}</style>
 </head>
 <body>
+	<div><button onclick="doDel(${data.i_board})">삭제</button></div>
 	<table>
 	
 	<tr class="number">
@@ -35,5 +36,12 @@
 	<td> ${data.ctnt}</td>
 	</table>
 
+	<script>
+		function doDel(i_board){
+			if(confirm('삭제하시겠습니까?')){
+				location.href='/boardDel?i_board=' + i_board
+			}			
+		}
+	</script>
 </body>
 </html>
