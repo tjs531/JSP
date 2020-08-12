@@ -84,7 +84,7 @@ public class BoardDAO {
 		PreparedStatement ps = null;
 		
 		String sql = "insert into t_board(i_board, title, ctnt, i_student) values (seq_board.nextval,?,?,?)";
-		int result =0;															//sequence 생성하고 사용. (숫자가 1씩 증가) 
+		int result = 0;															//sequence 생성하고 사용. (숫자가 1씩 증가) 
 
 		try {
 			con = DbCon.getCon();
@@ -113,6 +113,31 @@ public class BoardDAO {
 			con = DbCon.getCon();
 			ps = con.prepareStatement(sql);
 			ps.setInt(1,i_board); 
+			result = ps.executeUpdate();
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			DbCon.close(con, ps);
+		}
+		
+		return result;
+	}
+	
+	
+	public static int updateBoard(BoardVo param) {
+		Connection con = null;
+		PreparedStatement ps = null;
+		
+		String sql = "update t_board set title=?, ctnt=? where i_board=? ";
+		int result =0;															//sequence 생성하고 사용. (숫자가 1씩 증가) 
+
+		try {
+			con = DbCon.getCon();
+			ps = con.prepareStatement(sql);
+			ps.setNString(1,param.getTitle());			
+			ps.setNString(2,param.getCtnt());	
+			//ps.setInt(3,param.getI_student());
+			ps.setInt(3, param.getI_board());
 			result = ps.executeUpdate();
 		} catch(Exception e) {
 			e.printStackTrace();

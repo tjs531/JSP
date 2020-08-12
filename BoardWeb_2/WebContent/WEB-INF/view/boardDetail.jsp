@@ -13,7 +13,10 @@
 	td {border: 1px solid black; width: 400px;}</style>
 </head>
 <body>
-	<div><button onclick="doDel(${data.i_board})">삭제</button></div>
+	<div>
+	<button onclick="doDel(${data.i_board})">삭제</button>
+	<a href="/boardMod?i_board=${data.i_board}"><button>수정</button></a>
+	</div>
 	<table>
 	
 	<tr class="number">
@@ -35,6 +38,7 @@
 	<th>내용</th>
 	<td> ${data.ctnt}</td>
 	</table>
+	<a href="/boardList">리스트로가기</a>
 
 	<script>
 		function doDel(i_board){
