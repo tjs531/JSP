@@ -1,6 +1,7 @@
 package com.koreait.pjt.db;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.koreait.pjt.vo.UserVO;
@@ -10,7 +11,8 @@ public class UserDAO {
 		
 		String sql = "INSERT INTO t_user(i_user, user_id, upw, nm, email) VALUES (seq_user.nextval, ?,?,?,?)";
 		
-		return JdbcTemplate.executeUpdate(sql, new JdbcUpdateInterface() {
+		return JdbcTemplate.executeUpdate(sql, new JdbcUpdateInterface() {				//익명클래스.이건 그냥 클래스지 객체화한건 아니다. (인인터페이스는 객체화가 안된다.)
+																						//따로 클래스를 만들어 객체화해서 써도 되지만 param을 또 보내야 하는 등 번거로워짐. 이렇게 쓰면 깔끔.
 			@Override
 			public int update(PreparedStatement ps) throws SQLException {
 				ps.setNString(1,param.getUser_id());
@@ -20,6 +22,44 @@ public class UserDAO {
 				
 				return ps.executeUpdate();
 			}
+
+		});
+	}
+	
+	//0:에러발생, 1:로그인 성공, 2:비밀번호 틀림, 3:아이디 없음
+	public static int selUser(UserVO param) {
+		
+		String sql = "SELECT i_user, upw, nm FROM t_user WHERE user_id=?";
+				
+		return JdbcTemplate.executeQuery(sql, new JdbcSelectInterface() {
+
+			@Override
+			public ResultSet prepared(PreparedStatement ps) throws SQLException {
+				ps.setNString(1,  param.getUser_id());
+				return ps.executeQuery();
+			}
+
+			@Override
+			public int executeQuery(ResultSet rs) throws SQLException {
+				
+				if(rs.next()) {					//레코드가 있음
+					String dbPw = rs.getNString("upw");
+					
+					if(dbPw.equals(param.getUser_pw())) {	//로그인 성공(비밀번호 맞을 경우)
+						int i_user = rs.getInt("i_user");
+						String nm = rs.getNString("nm");
+						param.setUser_pw(null);
+						param.setI_user(i_user);
+						param.setNm(nm);
+						return 1;
+					} else {								//로그인 실패.(비밀번호 틀릴 경우)
+						return 2;
+					}
+				}else {							//레코드가 없음. (아이디 없음)
+					return 3;						
+				}
+				
+			}	
 		});
 	}
 }
