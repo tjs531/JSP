@@ -31,7 +31,7 @@ public class LoginSer extends HttpServlet {
 		param.setUser_id(user_id);
 		param.setUser_pw(encrypt_pw);
 		
-		int result = UserDAO.selUser(param);	//param의 주소값이 넘어가기 때문에 받은 곳에서 변경을 하면 그대로 변경됨.
+		int result = UserDAO.login(param);	//param의 주소값이 넘어가기 때문에 받은 곳에서 변경을 하면 그대로 변경됨.
 												//param에 i_user, user_id, nm 들어가있음.
 		
 		if(result != 1) {		//에러처리

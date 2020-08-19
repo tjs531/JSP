@@ -7,36 +7,34 @@ import java.sql.SQLException;
 import com.koreait.pjt.vo.UserVO;
 
 public class UserDAO {
-	public static int  insUser(UserVO param) {
+	public static int insUser(UserVO param) {
 		
 		String sql = "INSERT INTO t_user(i_user, user_id, upw, nm, email) VALUES (seq_user.nextval, ?,?,?,?)";
 		
-		return JdbcTemplate.executeUpdate(sql, new JdbcUpdateInterface() {				//익명클래스.이건 그냥 클래스지 객체화한건 아니다. (인인터페이스는 객체화가 안된다.)
+		return JdbcTemplate.executeUpdate(sql, new JdbcUpdateInterface() {				//익명클래스.이건 그냥 클래스지 객체화한건 아니다. implements한거다. (인터페이스는 객체화가 안된다.)
 																						//따로 클래스를 만들어 객체화해서 써도 되지만 param을 또 보내야 하는 등 번거로워짐. 이렇게 쓰면 깔끔.
 			@Override
-			public int update(PreparedStatement ps) throws SQLException {
+			public void update(PreparedStatement ps) throws SQLException {
 				ps.setNString(1,param.getUser_id());
 				ps.setNString(2,param.getUser_pw());
 				ps.setNString(3,param.getNm());
 				ps.setNString(4,param.getEmail());
 				
-				return ps.executeUpdate();
 			}
 
 		});
 	}
 	
 	//0:에러발생, 1:로그인 성공, 2:비밀번호 틀림, 3:아이디 없음
-	public static int selUser(UserVO param) {
+	public static int login(UserVO param) {
 		
 		String sql = "SELECT i_user, upw, nm FROM t_user WHERE user_id=?";
 				
 		return JdbcTemplate.executeQuery(sql, new JdbcSelectInterface() {
 
 			@Override
-			public ResultSet prepared(PreparedStatement ps) throws SQLException {
+			public void prepared(PreparedStatement ps) throws SQLException {
 				ps.setNString(1,  param.getUser_id());
-				return ps.executeQuery();
 			}
 
 			@Override
