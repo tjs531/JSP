@@ -56,8 +56,6 @@ public class LoginSer extends HttpServlet {
 		HttpSession hs = request.getSession();
 		hs.setAttribute(Const.LOGIN_USER,param);
 		
-		
-		
 		System.out.println("로그인성공");
 		response.sendRedirect("/board/list");
 	}
