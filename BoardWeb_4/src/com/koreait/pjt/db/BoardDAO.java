@@ -81,18 +81,18 @@ public class BoardDAO {
 		return str;
 	}*/
 	
-	public static BoardVO selDetail(String i_board) {
+	public static BoardVO selDetail(BoardVO param) {
 		BoardVO vo = new BoardVO();
 		
-		vo.setI_board(Integer.parseInt(i_board));
+		vo.setI_board(param.getI_board());
 		
-		String sql = "SELECT A.title, A.hits, B.nm, B.i_user, A.ctnt, TO_CHAR(A.r_dt,'YYYY/MM/DD HH24:MI') as r_dt FROM t_board4 A, t_user B where A.i_user= B.i_user AND A.i_board=?";
+		String sql = "SELECT A.title, A.hits, B.nm, B.i_user, A.ctnt, TO_CHAR(A.r_dt,'YYYY/MM/DD HH24:MI') as r_dt, TO_CHAR(A.m_dt,'YYYY/MM/DD HH24:MI') as m_dt FROM t_board4 A, t_user B where A.i_user= B.i_user AND A.i_board=?";
 		
 		JdbcTemplate.executeQuery(sql, new JdbcSelectInterface() {
 
 			@Override
 			public void prepared(PreparedStatement ps) throws SQLException { 
-				ps.setInt(1, Integer.parseInt(i_board));
+				ps.setInt(1, param.getI_board());
 			}
 
 			@Override
@@ -100,6 +100,7 @@ public class BoardDAO {
 				while(rs.next()) {
 					String title = rs.getNString("title");
 					String r_dt = rs.getNString("r_dt");
+					String m_dt = rs.getNString("m_dt");
 					String nm = rs.getNString("nm");
 					String ctnt = rs.getNString("ctnt");
 					int i_user = rs.getInt("i_user");
@@ -109,6 +110,7 @@ public class BoardDAO {
 					vo.setHits(hits);
 					vo.setNm(nm);
 					vo.setR_dt(r_dt);
+					vo.setM_dt(m_dt);
 					vo.setCtnt(ctnt);
 					vo.setI_user(i_user);
 				}
@@ -131,8 +133,8 @@ public class BoardDAO {
 		});
 	}
 	
-	public static int modBoard(BoardVO vo) {
-		String sql = "UPDATE t_board4 SET title=?, ctnt=? where i_board=?";
+	public static int updBoard(BoardVO vo) {
+		String sql = "UPDATE t_board4 SET title=?, ctnt=?, m_dt = sysdate where i_board=? AND i_user=?";
 		
 		return JdbcTemplate.executeUpdate(sql, new JdbcUpdateInterface() {
 
@@ -141,8 +143,35 @@ public class BoardDAO {
 				ps.setNString(1, vo.getTitle());
 				ps.setNString(2, vo.getCtnt());
 				ps.setInt(3, vo.getI_board());
+				ps.setInt(4, vo.getI_user());
 			}
 			
+		});
+	}
+	
+	public static int updHits(BoardVO vo) {
+		String sql = "UPDATE t_board4 SET hits=hits+1 where i_board=?";
+		
+		return JdbcTemplate.executeUpdate(sql, new JdbcUpdateInterface() {
+
+			@Override
+			public void update(PreparedStatement ps) throws SQLException {
+				ps.setInt(1, vo.getI_board());
+				//ps.setInt(2, vo.getI_board());
+			}
+		});
+	}
+	
+	public static int insHits(BoardVO vo) {
+		String sql = "insert into t_hits values (?,?)";
+		
+		return JdbcTemplate.executeUpdate(sql, new JdbcUpdateInterface() {
+
+			@Override
+			public void update(PreparedStatement ps) throws SQLException {
+				ps.setInt(1, vo.getI_board());
+				ps.setInt(2, vo.getI_user());
+			}
 		});
 	}
 }

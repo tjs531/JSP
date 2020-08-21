@@ -4,15 +4,14 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>등록/수정</title>
+<title>${data == null? '등록':'수정' }</title>
 </head>
 <body>
-	
 	<div>
 		<form id="frm" action="/board/regmod" method="post" onsubmit="return chk()">
 			<input type="hidden" name="i_board" value="${vo.i_board }">
-			<div>제목: <input type="text" name="title" value="${vo.title }"></div>
-			<div>내용: <textarea name="ctnt">${vo.ctnt }</textarea></div>
+			<div>제목: <input type="text" name="title" value="${vo.title }" placeholder="제목쓰세요"></div>
+			<div>내용: <textarea name="ctnt" placeholder="내용쓰세요">${vo.ctnt }</textarea></div>
 			<div><input type="submit" value="등록"> <a href="/board/list">뒤로</a></div>	
 		</form>
 	</div>

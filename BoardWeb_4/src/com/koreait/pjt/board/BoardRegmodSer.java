@@ -20,50 +20,49 @@ public class BoardRegmodSer extends HttpServlet {
        
 	//화면 띄우는 용도(등록창,수정창)
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String i_board = request.getParameter("i_board");
+		String i_board = request.getParameter("i_board");		//Detail에서 보내는 i_board
+		BoardVO vo = new BoardVO();
 		
 		if(i_board !=null) {
-			BoardVO vo = BoardDAO.selDetail(i_board);
 			vo.setI_board(Integer.parseInt(i_board));
-			BoardDAO.modBoard(vo);
-			request.setAttribute("vo",vo);
+			request.setAttribute("vo",BoardDAO.selDetail(vo));
 		}
 		
 		ViewResolver.forwardLoginChk("board/regmod", request, response);
 	}
-
+	
 	//처리용도 (DB에 등록/수정) 실시
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String i_board = request.getParameter("i_board");			//regmod에서 보내는 i_board
 		String title = request.getParameter("title");
 		String ctnt = request.getParameter("ctnt");
-		String i_board = request.getParameter("i_board");
-		BoardVO param = new BoardVO();
 		
-		System.out.println(i_board);
 		HttpSession hs = request.getSession();
 		UserVO loginUser = (UserVO) hs.getAttribute(Const.LOGIN_USER);
-		
-		
+		BoardVO param = new BoardVO();
 		
 		param.setTitle(title);
 		param.setCtnt(ctnt);
 		param.setI_user(loginUser.getI_user());
 		
+		int result;
 		
-		if(i_board != "") {
+		if(!i_board.equals("")) {							//넘어오는 i_board가 있긴 한데 값이 없어서 그냥 빈칸. 빈칸이 아니면 수정
 			param.setI_board(Integer.parseInt(i_board));
-			int mod_result = BoardDAO.modBoard(param);
-		}else {
-			int result = BoardDAO.insBoard(param);
-			
-			if(result != 1) {			//에러발생
-				request.setAttribute("msg", "에러가 발생했습니다. 관리자에게 문의 ㄱ");
-				request.setAttribute("data", param);
-				ViewResolver.forwardLoginChk("board/regmod", request, response);
-				return;
-			}
+			result = BoardDAO.updBoard(param);
+			response.sendRedirect("/board/detail?i_board=" + i_board);
+		}else {												//i_board가 빈칸. 등록.
+			result = BoardDAO.insBoard(param);
+			response.sendRedirect("/board/list");
 		}
 		
-		response.sendRedirect("/board/list");
+		if(result != 1) {			//에러발생
+			request.setAttribute("msg", "에러가 발생했습니다. 관리자에게 문의 ㄱ");
+			request.setAttribute("data", param);
+			ViewResolver.forwardLoginChk("board/regmod", request, response);
+			return;
+		}
+		
+		
 	}
 }
