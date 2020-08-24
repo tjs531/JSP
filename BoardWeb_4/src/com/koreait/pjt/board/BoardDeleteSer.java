@@ -36,7 +36,8 @@ public class BoardDeleteSer extends HttpServlet {
 		
 		int result = BoardDAO.delBoard(param);
 		
-		response.sendRedirect("/board/list");
+		//response.sendRedirect("/board/list");
+		ViewResolver.forwardLoginChk("board/delete", request, response);
 		
 	}
 

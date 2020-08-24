@@ -15,11 +15,14 @@ public class BoardDAO {
 		
 		//String sql = "SELECT i_board, title, hits, i_user, r_dt FROM t_board4 ORDER BY i_board DESC";
 		String sql = "SELECT A.i_board, A.title, A.hits, B.nm, A.r_dt FROM t_board4 A, t_user B where A.i_user= B.i_user ORDER BY i_board DESC";
-				
+		
+		//String sql = "SELECT A.i_board, A.title, count(C.i_board), B.nm, A.r_dt FROM t_board4 A, t_user B, t_hits C where A.i_user= B.i_user and C.i_user=? ORDER BY i_board DESC";
+		
 		int result = JdbcTemplate.executeQuery(sql, new JdbcSelectInterface() {
 
 			@Override
-			public void prepared(PreparedStatement ps) throws SQLException { }
+			public void prepared(PreparedStatement ps) throws SQLException { 
+			}
 
 			@Override
 			public int executeQuery(ResultSet rs) throws SQLException {
@@ -86,13 +89,20 @@ public class BoardDAO {
 		
 		vo.setI_board(param.getI_board());
 		
-		String sql = "SELECT A.title, A.hits, B.nm, B.i_user, A.ctnt, TO_CHAR(A.r_dt,'YYYY/MM/DD HH24:MI') as r_dt, TO_CHAR(A.m_dt,'YYYY/MM/DD HH24:MI') as m_dt FROM t_board4 A, t_user B where A.i_user= B.i_user AND A.i_board=?";
+		//String sql = "SELECT A.title, A.hits, B.nm, B.i_user, A.ctnt, TO_CHAR(A.r_dt,'YYYY/MM/DD HH24:MI') as r_dt, TO_CHAR(A.m_dt,'YYYY/MM/DD HH24:MI') as m_dt FROM t_board4 A, t_user B where A.i_user= B.i_user AND A.i_board=?";
+		String sql = "SELECT A.title, A.hits, B.nm, B.i_user, A.ctnt, TO_CHAR(A.r_dt,'YYYY/MM/DD HH24:MI') as r_dt, TO_CHAR(A.m_dt,'YYYY/MM/DD HH24:MI') as m_dt, DECODE(C.i_user, null, 0, 1) as yn_like "
+				+ " FROM t_board4 A inner join t_user B on A.i_user= B.i_user "
+				+ " left join t_board4_like C "
+				+ " on A.i_board = C.i_board and C.i_user = ? "
+				+ " where A.i_board = ? ";
+		
 		
 		JdbcTemplate.executeQuery(sql, new JdbcSelectInterface() {
 
 			@Override
 			public void prepared(PreparedStatement ps) throws SQLException { 
-				ps.setInt(1, param.getI_board());
+				ps.setInt(1, param.getI_user());
+				ps.setInt(2, param.getI_board());
 			}
 
 			@Override
@@ -105,6 +115,7 @@ public class BoardDAO {
 					String ctnt = rs.getNString("ctnt");
 					int i_user = rs.getInt("i_user");
 					int hits = rs.getInt("hits");
+					int yn_like = rs.getInt("yn_like");
 					
 					vo.setTitle(title);
 					vo.setHits(hits);
@@ -113,6 +124,7 @@ public class BoardDAO {
 					vo.setM_dt(m_dt);
 					vo.setCtnt(ctnt);
 					vo.setI_user(i_user);
+					vo.setYn_like(yn_like);
 				}
 				return 1;
 			}
@@ -150,14 +162,16 @@ public class BoardDAO {
 	}
 	
 	public static int updHits(BoardVO vo) {
-		String sql = "UPDATE t_board4 SET hits=hits+1 where i_board=?";
+		//String sql = "UPDATE t_board4 SET hits=hits+1 where i_board=?";
+		
+		String sql = "UPDATE t_board4 SET hits=(select count(i_user) from t_hits where i_board=? group by i_board) where i_board=?";
 		
 		return JdbcTemplate.executeUpdate(sql, new JdbcUpdateInterface() {
 
 			@Override
 			public void update(PreparedStatement ps) throws SQLException {
 				ps.setInt(1, vo.getI_board());
-				//ps.setInt(2, vo.getI_board());
+				ps.setInt(2, vo.getI_board());
 			}
 		});
 	}

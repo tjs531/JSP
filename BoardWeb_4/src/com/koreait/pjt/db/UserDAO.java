@@ -4,9 +4,27 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import com.koreait.pjt.vo.UserLoginHistoryVO;
 import com.koreait.pjt.vo.UserVO;
 
 public class UserDAO {
+	
+	public static int insUserLoginHistory(UserLoginHistoryVO param) {
+		
+		String sql = "INSERT INTO t_user_loginhistory(i_history,i_user,ip_addr,os,browser) VALUES (seq_userloginhistory.nextval, ?, ?, ?, ?)";
+		
+		return JdbcTemplate.executeUpdate(sql, new JdbcUpdateInterface() {				//익명클래스.이건 그냥 클래스지 객체화한건 아니다. implements한거다. (인터페이스는 객체화가 안된다.)
+			//따로 클래스를 만들어 객체화해서 써도 되지만 param을 또 보내야 하는 등 번거로워짐. 이렇게 쓰면 깔끔.
+			@Override
+			public void update(PreparedStatement ps) throws SQLException {
+				ps.setInt(1,param.getI_user());
+				ps.setNString(2,param.getIp_addr());
+				ps.setNString(3,param.getOs());
+				ps.setNString(4,param.getBrowser());
+			}
+		});
+	}
+	
 	public static int insUser(UserVO param) {
 		
 		String sql = "INSERT INTO t_user(i_user, user_id, upw, nm, email) VALUES (seq_user.nextval, ?,?,?,?)";

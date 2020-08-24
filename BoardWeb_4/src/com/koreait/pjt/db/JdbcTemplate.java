@@ -33,7 +33,7 @@ public class JdbcTemplate {
 		PreparedStatement ps = null;
 		
 		try {
-			con= DbCon.getCon();
+			con= DbCon.getCon(); 
 			ps = con.prepareStatement(sql);
 			
 			jdbc.update(ps);

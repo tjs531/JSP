@@ -5,14 +5,25 @@
 <head>
 <meta charset="UTF-8">
 <title>${data == null? '등록':'수정' }</title>
+<style>
+	.container {text-align:center;}
+	form {margin:100px auto; width:500px; height:300px; background-color:#F8F8F4; padding-top:80px; border-radius: 30%;}
+	#title {margin-bottom: 30px; margin-top: -20px;}
+	#title input {border:none; background-color: #F8F8F4; border-bottom: 1px solid black; text-align:center;}
+	#ctnt {margin-bottom: 30px;}
+	#ctnt textarea {width: 300px; height: 150px; }
+	#btn input {margin-right:50px; width:80px; height:30px; background-color:#f5d1ca; border:none; border-radius:50%; }
+	#btn {margin-left:100px;}
+	#btn a {color:grey; text-decoration:none;}
+</style>
 </head>
 <body>
-	<div>
+	<div class="container">
 		<form id="frm" action="/board/regmod" method="post" onsubmit="return chk()">
 			<input type="hidden" name="i_board" value="${vo.i_board }">
-			<div>제목: <input type="text" name="title" value="${vo.title }" placeholder="제목쓰세요"></div>
-			<div>내용: <textarea name="ctnt" placeholder="내용쓰세요">${vo.ctnt }</textarea></div>
-			<div><input type="submit" value="등록"> <a href="/board/list">뒤로</a></div>	
+			<div id="title"><input type="text" name="title" value="${vo.title }" placeholder="제목쓰세요"></div>
+			<div id="ctnt"><textarea name="ctnt" placeholder="내용쓰세요">${vo.ctnt }</textarea></div>
+			<div id="btn"><input type="submit" value="등록"> <a href="/board/list">뒤로</a></div>	
 		</form>
 	</div>
 	

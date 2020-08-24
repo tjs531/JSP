@@ -9,6 +9,7 @@ public class BoardVO {
 	private String nm;
 	private String r_dt;
 	private String m_dt;
+	private int yn_like;
 	
 	public String getNm() {
 		return nm;
@@ -57,6 +58,12 @@ public class BoardVO {
 	}
 	public void setM_dt(String m_dt) {
 		this.m_dt = m_dt;
+	}
+	public int getYn_like() {
+		return yn_like;
+	}
+	public void setYn_like(int yn_like) {
+		this.yn_like = yn_like;
 	}
 	
 	
