@@ -1,8 +1,6 @@
 package com.koreait.pjt.board;
 
 import java.io.IOException;
-
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -10,53 +8,54 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.koreait.pjt.MyUtils;
+import com.koreait.pjt.Const;
 import com.koreait.pjt.ViewResolver;
 import com.koreait.pjt.db.BoardDAO;
 import com.koreait.pjt.db.UserDAO;
 import com.koreait.pjt.vo.BoardVO;
 import com.koreait.pjt.vo.UserVO;
 
-
-
-@WebServlet("/board/detail")
-public class BoardDetailSer extends HttpServlet {
+/**
+ * Servlet implementation class ToggleLikeSer
+ */
+@WebServlet("/board/toggleLike")
+public class ToggleLikeSer extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-
-   
+       
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		UserVO loginUser = MyUtils.getLoginUser(request);
-		
-		if(loginUser == null) {
-			response.sendRedirect("/login");
-			return;
-		}
-		
 		String i_board = request.getParameter("i_board");
-		//ServletContext application = getServletContext();
-		//Integer readI_user = (Integer)application.getAttribute("read_" + i_board);		//int는 null을 변환하면 에러터지지만 Integer는 괜찮음.(객체형)
+		String yn_like = request.getParameter("yn_like");
+		String yn_hate = request.getParameter("yn_hate");
+		HttpSession hs = request.getSession();
+		UserVO loginUser = (UserVO) hs.getAttribute(Const.LOGIN_USER);
 		
 		BoardVO vo = new BoardVO();
+		
 		vo.setI_board(Integer.parseInt(i_board));
 		vo.setI_user(loginUser.getI_user());
 		
-		
-		//단독으로 조회수 올리기 방지 (새로고침 할 시 조회수+1 방지)
-	/*	if(readI_user == null || readI_user != loginUser.getI_user()) {
-			//조회수 올리기
-			BoardDAO.updHits(vo);
-			application.setAttribute("read_" + i_board, loginUser.getI_user());
-		}*/
-		
-		//t_hits 테이블 따로 만들어서 삽입 후 업데이트
-		int result = BoardDAO.insHits(vo);
-		
-		if(result == 1) {
-			BoardDAO.updHits(vo);
+		if(yn_hate == null) {
+			if(Integer.parseInt(yn_like) == 0) {
+				BoardDAO.insLike(vo);
+			} else {
+				BoardDAO.delLike(vo);
+			}
+			
+		} else {
+			if(Integer.parseInt(yn_hate) == 0) {
+				BoardDAO.insHate(vo);
+			} else {
+				BoardDAO.delHate(vo);
+			}
+			
 		}
 		
-		//vo = BoardDAO.selDetail(vo);
+		
+	/*	if(Integer.parseInt(yn_hate) == 0) {
+			BoardDAO.insHate(vo);
+		}else {
+			BoardDAO.delHate(vo);
+		}*/
 		request.setAttribute("likelist", UserDAO.selLikeList(vo,"like"));
 		request.setAttribute("hatelist", UserDAO.selLikeList(vo,"hate"));
 		request.setAttribute("vo", BoardDAO.selDetail(vo));
@@ -66,5 +65,4 @@ public class BoardDetailSer extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 	}
-
 }

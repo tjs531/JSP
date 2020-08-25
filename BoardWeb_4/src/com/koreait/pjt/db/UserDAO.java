@@ -3,7 +3,10 @@ package com.koreait.pjt.db;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
+import com.koreait.pjt.vo.BoardVO;
 import com.koreait.pjt.vo.UserLoginHistoryVO;
 import com.koreait.pjt.vo.UserVO;
 
@@ -77,5 +80,36 @@ public class UserDAO {
 				
 			}	
 		});
+	}
+	
+	public static List<UserVO> selLikeList(BoardVO vo,String likeorhate) {
+		//String sql = "Select B.nm, B.profile_img from t_board4_like A, t_user B where A.i_user = B.i_user and A.i_board=?";
+		
+		String sql = "Select B.nm, B.profile_img from t_board4_"+likeorhate+" A, t_user B where A.i_user = B.i_user and A.i_board=?";
+		
+		final List<UserVO> list = new ArrayList<UserVO>();
+		
+		int result = JdbcTemplate.executeQuery(sql, new JdbcSelectInterface() {
+
+			@Override
+			public void prepared(PreparedStatement ps) throws SQLException { 
+				ps.setInt(1, vo.getI_board());
+			}
+
+			@Override
+			public int executeQuery(ResultSet rs) throws SQLException {
+				while(rs.next()) {
+					String nm = rs.getNString("nm");
+					String img = rs.getNString("profile_img");
+					UserVO vo = new UserVO();
+					vo.setNm(nm);
+					vo.setProfile_img(img);
+					
+					list.add(vo);
+				}
+				return 1;
+			}
+		});
+		return list;
 	}
 }
