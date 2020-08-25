@@ -11,6 +11,7 @@ public class BoardVO {
 	private String m_dt;
 	private int yn_like;
 	private int yn_hate;
+	private int c_like;
 	
 	public String getNm() {
 		return nm;
@@ -71,6 +72,13 @@ public class BoardVO {
 	}
 	public void setYn_hate(int yn_hate) {
 		this.yn_hate = yn_hate;
+	}
+	
+	public int getC_like() {
+		return c_like;
+	}
+	public void setC_like(int c_like) {
+		this.c_like = c_like;
 	}
 	
 	

@@ -15,10 +15,10 @@
 	a {text-decoration:none; color:red; font-size:0.8em;}
 	table {border-collapse: collapse; text-align:center; width:1000px; margin: 0 auto;}
 	table th, td{border:1px solid black; height: 30px;}
-	th {background-color:#f5d1ca;}
-	.itemRow:hover {cursor : pointer; background-color:lightgrey;}
+	th {background-color:#DBC9EC;}
+	.itemRow:hover {cursor : pointer; background-color:#F0E9F7;}
 	#list {display: inline-block;}
-	#btn {width:1000px; height:30px; margin-bottom: 10px; border-radius: 20px; border:none; background-color:#f5d1ca;}
+	#btn {width:1000px; height:30px; margin-bottom: 10px; border-radius: 20px; border:none; background-color:#DBC9EC;}
 </style>
 </head>
 <body>
@@ -32,10 +32,11 @@
 	<table>
 		<tr>
 			<th class="i_board">번호</th>
-			<th class="title">제목</th>
-			<th class="i_user">작성자</th>
-			<th class="hits">조회수</th>
-			<th class="date">작성일자</th>
+			<th class="title">제목🔖</th>
+			<th class="i_user">작성자🤸‍♂️</th>
+			<th class="hits">조회수👀</th>
+			<th class="date">👍</th>
+		<!-- 	<th class="date">작성일자</th>  -->
 		</tr>
 		<c:forEach items="${list}" var ="item">
 		<tr class="itemRow" onclick="todetail(${item.i_board})">
@@ -44,7 +45,8 @@
 		<!-- <td>${item.i_user}</td> -->
 			<td class="i_user">${item.nm }</td>	
 			<td class="hits">${item.hits}</td>
-			<td class="date">${item.r_dt}</td>
+			<td class="like">${item.c_like}</td>
+		<!-- 	<td class="date">${item.r_dt}</td> -->
 		</tr>
 		</c:forEach>
 	</table>

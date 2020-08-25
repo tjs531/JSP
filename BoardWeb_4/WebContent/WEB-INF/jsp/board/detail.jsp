@@ -50,13 +50,13 @@ a {
 #title {
 	font-size: 1.8em;
 	font-weight: bold;
-	color: #f5d1ca;
+	color: #DBC9EC;
 	padding: 10px;
 }
 
 #ctnt {
 	font-size: 1.1em;
-	background-color: #F8F8F4;
+	background-color: #F0E9F7;
 	padding: 50px;
 	border-radius: 20%;
 }
@@ -99,8 +99,9 @@ a {
 				<div id="hits">조회수 : ${vo.hits}</div>
 			</div>
 
-			<div class="like_hate_btn">
-				<div class="pointerCursor" onclick="toggleLikeorHate(1)">
+		<!-- 	<div class="like_hate_btn"> -->
+				<!--  <div class="pointerCursor" onclick="toggleLikeorHate(1)">-->
+				<div class="pointerCursor" onclick="toggleLike(${vo.yn_like})">
 					<c:if test="${vo.yn_like == 1}">
 						<i class="fas fa-thumbs-up"></i>
 					</c:if>
@@ -110,7 +111,7 @@ a {
 					${likelist.size() }
 				</div>
 
-				<div class="pointerCursor" onclick="toggleLikeorHate(2)">
+		<!-- 	<div class="pointerCursor" onclick="toggleLikeorHate(2)">
 					<c:if test="${vo.yn_hate == 1}">
 						<i class="fas fa-thumbs-down"></i>
 					</c:if>
@@ -118,8 +119,8 @@ a {
 						<i class="far fa-thumbs-down"></i>
 					</c:if>
 					${hatelist.size() }
-				</div>
-			</div>
+				</div> -->	
+		<!--  	</div>-->
 
 			<div class="likelist">
 				<c:forEach items="${likelist}" var="like">
@@ -164,16 +165,13 @@ a {
 		}
 		
 		
-		function toggleLikeorHate(loh){
+/*		function toggleLikeorHate(loh){
 			if(loh == 1){
 				location.href="/board/toggleLike?i_board=${vo.i_board}&yn_like=${vo.yn_like}";
 			}else{
 				location.href="/board/toggleLike?i_board=${vo.i_board}&yn_hate=${vo.yn_hate}";
 			}
-		}
-		function toggleHate(){
-			location.href="/board/toggleHate?i_board=${vo.i_board}&yn_hate=${vo.yn_hate}";
-		}
+		}*/
 	</script>
 </body>
 </html>

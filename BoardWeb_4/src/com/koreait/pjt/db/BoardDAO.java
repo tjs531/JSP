@@ -13,12 +13,16 @@ public class BoardDAO {
 	public static List<BoardVO> selBoardList() {
 		final List<BoardVO> list = new ArrayList();			//레퍼런스변수에 final 붙이면 '주소값'을 변경할 수 없다. (그 안에 값을 넣고 빼고 하는건 가능)
 		
-		//String sql = "SELECT i_board, title, hits, i_user, r_dt FROM t_board4 ORDER BY i_board DESC";
-		String sql = "SELECT A.i_board, A.title, A.hits, B.nm, A.r_dt FROM t_board4 A, t_user B where A.i_user= B.i_user ORDER BY i_board DESC";
+		//String sql = "SELECT A.i_board, A.title, A.hits, B.nm, A.r_dt FROM t_board4 A, t_user B where A.i_user= B.i_user ORDER BY i_board DESC";
 		
-		//String sql = "SELECT A.i_board, A.title, count(C.i_board), B.nm, A.r_dt FROM t_board4 A, t_user B, t_hits C where A.i_user= B.i_user and C.i_user=? ORDER BY i_board DESC";
+		String sql = "select A.i_board, A.title, A.hits, B.nm, A.r_dt, "
+				+ " NVL((select count(i_user) from t_board4_like group by i_board having a.i_board=i_board),0) as c_like "
+				+ " from t_board4 A, t_user B "
+				+ " where A.i_user = B.i_user "
+				+ " order by A.i_board desc";
 		
-		int result = JdbcTemplate.executeQuery(sql, new JdbcSelectInterface() {
+		
+		JdbcTemplate.executeQuery(sql, new JdbcSelectInterface() {
 
 			@Override
 			public void prepared(PreparedStatement ps) throws SQLException { 
@@ -33,6 +37,7 @@ public class BoardDAO {
 					//int i_user = rs.getInt("i_user");
 					String r_dt = rs.getNString("r_dt");
 					String nm = rs.getNString("nm");
+					int c_like = rs.getInt("c_like");
 					
 					BoardVO vo = new BoardVO();
 					vo.setI_board(i_board);
@@ -41,6 +46,7 @@ public class BoardDAO {
 					//vo.setI_user(i_user);
 					vo.setNm(nm);
 					vo.setR_dt(r_dt);
+					vo.setC_like(c_like);
 					
 					list.add(vo);
 				}
@@ -64,26 +70,6 @@ public class BoardDAO {
 		});
 	}
 	
-/*	public static List<String> getname(int i_user) {
-		List<String> str = new ArrayList();
-		String sql = "Select nm from t_user where i_user="+i_user;
-		
-		int result = JdbcTemplate.executeQuery(sql, new JdbcSelectInterface() {
-
-			@Override
-			public void prepared(PreparedStatement ps) throws SQLException { }
-
-			@Override
-			public int executeQuery(ResultSet rs) throws SQLException {
-				if(rs.next()) {
-					str.add(rs.getNString("nm"));
-				}
-				return 1;
-			}
-		});		
-		return str;
-	}*/
-	
 	public static BoardVO selDetail(BoardVO param) {
 		BoardVO vo = new BoardVO();
 		
@@ -96,35 +82,21 @@ public class BoardDAO {
 				+ " on A.i_board = C.i_board and C.i_user = ? "
 				+ " where A.i_board = ? "; */
 		
-		/*String sql = "SELECT B.nm, A.i_user, A.title, A.ctnt, A.hits, TO_CHAR(A.r_dt,'YYYY/MM/DD HH24:MI') As r_dt, "
+		String sql = "SELECT B.nm, A.i_user, A.title, A.ctnt, A.hits, TO_CHAR(A.r_dt,'YYYY/MM/DD HH24:MI') As r_dt, "
 				+ " TO_CHAR(A.m_dt,'YYYY/MM/DD HH24:MI') as m_dt, DECODE(C.i_user, null, 0, 1) as yn_like "
 				+ " from t_board4 A inner join t_user B "
 				+ " on A.i_user = B.i_user "
 				+ " left join t_board4_like C "
 				+ " on A.i_board = C.i_board "
 				+ " and C.i_user =? "
-				+ " where A.i_board=?";*/
-		
-		String sql = "SELECT B.nm, A.i_user, A.title, A.ctnt, A.hits, TO_CHAR(A.r_dt,'YYYY/MM/DD HH24:MI') As r_dt, "
-				+ " TO_CHAR(A.m_dt,'YYYY/MM/DD HH24:MI') as m_dt, DECODE(C.i_user, null, 0, 1) as yn_like , DECODE(D.i_user, null, 0, 1) as yn_hate"
-				+ " from t_board4 A inner join t_user B "
-				+ " on A.i_user = B.i_user "
-				+ " left join t_board4_like C "
-				+ " on A.i_board = C.i_board "
-				+ " and C.i_user =? "
-				+ " left join t_board4_hate D "
-                + " on A.i_board = D.i_board "
-                + " and D.i_user=? "
 				+ " where A.i_board=?";
-		
 		
 		JdbcTemplate.executeQuery(sql, new JdbcSelectInterface() {
 
 			@Override
 			public void prepared(PreparedStatement ps) throws SQLException { 
 				ps.setInt(1, param.getI_user());
-				ps.setInt(2, param.getI_user());
-				ps.setInt(3, param.getI_board());
+				ps.setInt(2, param.getI_board());
 			}
 
 			@Override
@@ -138,7 +110,6 @@ public class BoardDAO {
 					int i_user = rs.getInt("i_user");
 					int hits = rs.getInt("hits");
 					int yn_like = rs.getInt("yn_like");
-					int yn_hate = rs.getInt("yn_hate");
 					
 					vo.setTitle(title);
 					vo.setHits(hits);
@@ -148,7 +119,6 @@ public class BoardDAO {
 					vo.setCtnt(ctnt);
 					vo.setI_user(i_user);
 					vo.setYn_like(yn_like);
-					vo.setYn_hate(yn_hate);
 				}
 				return 1;
 			}
@@ -185,6 +155,8 @@ public class BoardDAO {
 		});
 	}
 	
+	////////////////// Hits /////////////////////////////
+	
 	public static int updHits(BoardVO vo) {
 		//String sql = "UPDATE t_board4 SET hits=hits+1 where i_board=?";
 		
@@ -213,6 +185,8 @@ public class BoardDAO {
 		});
 	}
 	
+	/////////////////// like ///////////////////////////
+	
 	public static int insLike(BoardVO vo) {
 		String sql = "INSERT into t_board4_like(i_board,i_user) values (?,?)";
 		
@@ -239,29 +213,36 @@ public class BoardDAO {
 		});
 	}
 	
-	public static int insHate(BoardVO vo) {
-		String sql = "INSERT into t_board4_hate(i_board,i_user) values (?,?)";
+	//like 누른사람 리스트
+	public static List<UserVO> selLikeList(BoardVO vo,String likeorhate) {
+		//String sql = "Select B.nm, B.profile_img from t_board4_like A, t_user B where A.i_user = B.i_user and A.i_board=?";
 		
-		return JdbcTemplate.executeUpdate(sql, new JdbcUpdateInterface() {
+		String sql = "Select B.nm, B.profile_img from t_board4_"+likeorhate+" A, t_user B where A.i_user = B.i_user and A.i_board=?";
+		
+		final List<UserVO> list = new ArrayList<UserVO>();
+		
+		JdbcTemplate.executeQuery(sql, new JdbcSelectInterface() {
 
 			@Override
-			public void update(PreparedStatement ps) throws SQLException {
+			public void prepared(PreparedStatement ps) throws SQLException { 
 				ps.setInt(1, vo.getI_board());
-				ps.setInt(2, vo.getI_user());
 			}
-		});
-	}
-	
-	public static int delHate(BoardVO vo) {
-		String sql = "DELETE FROM t_board4_hate where i_board=? AND i_user=?";
-		
-		return JdbcTemplate.executeUpdate(sql, new JdbcUpdateInterface() {
 
 			@Override
-			public void update(PreparedStatement ps) throws SQLException {
-				ps.setInt(1, vo.getI_board());
-				ps.setInt(2, vo.getI_user());
+			public int executeQuery(ResultSet rs) throws SQLException {
+				while(rs.next()) {
+					String nm = rs.getNString("nm");
+					String img = rs.getNString("profile_img");
+					UserVO vo = new UserVO();
+					vo.setNm(nm);
+					vo.setProfile_img(img);
+					
+					list.add(vo);
+				}
+				return 1;
 			}
 		});
+		
+		return list;
 	}
 }
