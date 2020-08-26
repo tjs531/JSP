@@ -1,6 +1,8 @@
 package com.koreait.pjt.board;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -12,10 +14,12 @@ import javax.servlet.http.HttpSession;
 
 import com.koreait.pjt.MyUtils;
 import com.koreait.pjt.ViewResolver;
+import com.koreait.pjt.db.BoardCmtDAO;
 import com.koreait.pjt.db.BoardDAO;
 import com.koreait.pjt.db.UserDAO;
 import com.koreait.pjt.vo.BoardVO;
 import com.koreait.pjt.vo.UserVO;
+import com.koreait.pjt.vo.BoardCmtVO;
 
 
 
@@ -23,7 +27,6 @@ import com.koreait.pjt.vo.UserVO;
 public class BoardDetailSer extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-   
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		UserVO loginUser = MyUtils.getLoginUser(request);
@@ -56,6 +59,8 @@ public class BoardDetailSer extends HttpServlet {
 			BoardDAO.updHits(vo);
 		}
 		
+		//댓글 리스트
+		request.setAttribute("cmtlist", BoardCmtDAO.selCmtList(vo));
 		//like누른사람 리스트
 		request.setAttribute("likelist", BoardDAO.selLikeList(vo,"like"));
 		request.setAttribute("vo", BoardDAO.selDetail(vo));

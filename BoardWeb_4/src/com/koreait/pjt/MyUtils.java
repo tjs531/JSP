@@ -45,9 +45,12 @@ public class MyUtils {
 		return false;
 	}
 	
-	
 	public static UserVO getLoginUser(HttpServletRequest request) {
 		HttpSession hs = request.getSession();
 		return (UserVO)hs.getAttribute(Const.LOGIN_USER);
+	}
+	
+	public static int getIntParameter(HttpServletRequest request, String keyNm) {
+		return Integer.parseInt(request.getParameter(keyNm));
 	}
 }

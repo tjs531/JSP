@@ -44,7 +44,7 @@ a {
 }
 
 #tolist {
-	margin-left: -50px;
+	margin-left: 250px;
 }
 
 #title {
@@ -64,7 +64,10 @@ a {
 .sub {
 	font-size: 0.8em;
 	color: grey;
+	display : inline-block;
 }
+
+#nm, #m_dt, #hits {display : inline-block; margin-left:30px;}
 
 #like {
 	margin-left: 20px;
@@ -81,10 +84,16 @@ a {
 .likelist {
 	
 }
-
 .like_hate_btn {
 	list-style-type:none;
 }
+.cmt {margin: 30px;}
+.cmt table {margin:10px auto;}
+.cmt th, td {padding-left:30px; height:25px;}
+
+#cmt_r_dt {font-size:0.8em;}
+#cmtupdFrm {display:inline-block;}
+#cmttext{margin-top:40px;}
 </style>
 </head>
 <body>
@@ -99,8 +108,6 @@ a {
 				<div id="hits">조회수 : ${vo.hits}</div>
 			</div>
 
-		<!-- 	<div class="like_hate_btn"> -->
-				<!--  <div class="pointerCursor" onclick="toggleLikeorHate(1)">-->
 				<div class="pointerCursor" onclick="toggleLike(${vo.yn_like})">
 					<c:if test="${vo.yn_like == 1}">
 						<i class="fas fa-thumbs-up"></i>
@@ -110,17 +117,6 @@ a {
 					</c:if>
 					${likelist.size() }
 				</div>
-
-		<!-- 	<div class="pointerCursor" onclick="toggleLikeorHate(2)">
-					<c:if test="${vo.yn_hate == 1}">
-						<i class="fas fa-thumbs-down"></i>
-					</c:if>
-					<c:if test="${vo.yn_hate == 0}">
-						<i class="far fa-thumbs-down"></i>
-					</c:if>
-					${hatelist.size() }
-				</div> -->	
-		<!--  	</div>-->
 
 			<div class="likelist">
 				<c:forEach items="${likelist}" var="like">
@@ -140,13 +136,40 @@ a {
 				<form id="delFrm" action="/board/del" method="post">
 					<input type="hidden" name="i_board" value="${vo.i_board }">
 					<a href="#" onclick="submitDel()">삭제</a>
-					<!--  <input type="submit" value="삭제">-->
 				</form>
-				<!-- <a href="/board/del?i_board=${vo.i_board }">삭제</a> -->
 			</c:if>
 		</div>
-
-
+		
+		<div>
+			<form id="cmtFrm" action ="/board/cmt" method="post">
+				<input type="hidden" id="updvalue" name="i_cmt" value="0">
+				<input type="hidden" name="i_board" value="${vo.i_board}">
+				<div>
+					<input type="text" name="cmt" id="cmttext" placeholder="댓글내용">
+					<input type="submit" value="전송">
+				</div>
+			</form>
+		</div>
+		<div class="cmt">
+			댓글 리스트
+			<table>
+				<c:forEach items="${cmtlist}" var="cmt" varStatus="status">
+					<tr>
+						<th id="cmt_count">${status.count}</th>
+						<td id="cmt_cmt">${cmt.cmt}</td>
+						<td id="cmt_nm">${cmt.nm} </td>
+						<td id="cmt_r_dt">${cmt.r_dt}</td>
+						
+						<td> 
+							<c:if test="${loginUser.i_user == cmt.i_user}">
+									<a id="updcmt" href="#" onclick="updateCmt('${cmt.cmt}','${cmt.i_cmt }')">수정</a>
+									<a href="/board/cmt?i_cmt=${cmt.i_cmt}&i_board=${vo.i_board}">삭제</a>
+							</c:if>
+						</td>
+					</tr>
+				</c:forEach>
+			</table>
+		</div>
 	</div>
 	<script>
 
@@ -164,14 +187,12 @@ a {
 			location.href="/board/toggleLike?i_board=${vo.i_board}&yn_like="+yn_like;
 		}
 		
+		function updateCmt(text,i_cmt){
+			cmttext.setAttribute('value',text);
+			var upd = document.getElementById('updvalue');
+			updvalue.setAttribute('value',i_cmt);
 		
-/*		function toggleLikeorHate(loh){
-			if(loh == 1){
-				location.href="/board/toggleLike?i_board=${vo.i_board}&yn_like=${vo.yn_like}";
-			}else{
-				location.href="/board/toggleLike?i_board=${vo.i_board}&yn_hate=${vo.yn_hate}";
-			}
-		}*/
+		}
 	</script>
 </body>
 </html>

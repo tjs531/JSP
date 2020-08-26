@@ -34,7 +34,7 @@
 			<th class="i_board">번호</th>
 			<th class="title">제목🔖</th>
 			<th class="i_user">작성자🤸‍♂️</th>
-			<th class="hits">조회수👀</th>
+			<th class="hits">👀</th>
 			<th class="date">👍</th>
 		<!-- 	<th class="date">작성일자</th>  -->
 		</tr>
