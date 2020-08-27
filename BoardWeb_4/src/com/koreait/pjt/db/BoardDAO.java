@@ -10,22 +10,32 @@ import com.koreait.pjt.vo.BoardVO;
 import com.koreait.pjt.vo.UserVO;
 
 public class BoardDAO {
-	public static List<BoardVO> selBoardList() {
+	public static List<BoardVO> selBoardList(BoardVO param) {
 		final List<BoardVO> list = new ArrayList();			//레퍼런스변수에 final 붙이면 '주소값'을 변경할 수 없다. (그 안에 값을 넣고 빼고 하는건 가능)
 		
 		//String sql = "SELECT A.i_board, A.title, A.hits, B.nm, A.r_dt FROM t_board4 A, t_user B where A.i_user= B.i_user ORDER BY i_board DESC";
 		
-		String sql = "select A.i_board, A.title, A.hits, B.nm, A.r_dt, "
-				+ " NVL((select count(i_user) from t_board4_like group by i_board having a.i_board=i_board),0) as c_like "
+		/*String sql = "select A.i_board, A.title, A.hits, B.nm, A.r_dt, "
+				+ " NVL((select count(i_user) from t_board4_like group by i_board having a.i_board=i_board),0) as c_like,"
+				+ " NVL((select count(i_cmt) from t_board4_cmt group by i_board having i_board=A.i_board),0) as c_cmt "
 				+ " from t_board4 A, t_user B "
 				+ " where A.i_user = B.i_user "
-				+ " order by A.i_board desc";
+				+ " order by A.i_board desc";*/
+		
+		String sql = "select A.* from (select  rownum as rnum, A.* from (select A.i_board, A.title, A.hits, B.nm, A.r_dt, "
+				+ " NVL((select count(i_user) from t_board4_like group by i_board having a.i_board=i_board),0) as c_like,"
+				+ " NVL((select count(i_cmt) from t_board4_cmt group by i_board having i_board=A.i_board),0) as c_cmt "
+				+ " from t_board4 A, t_user B "
+				+ " where A.i_user = B.i_user "
+				+ " order by A.i_board desc) A where rownum<=? ) A where a.rnum>?";
 		
 		
 		JdbcTemplate.executeQuery(sql, new JdbcSelectInterface() {
 
 			@Override
 			public void prepared(PreparedStatement ps) throws SQLException { 
+				ps.setInt(1, param.getEldx());
+				ps.setInt(2, param.getSldx());
 			}
 
 			@Override
@@ -38,6 +48,7 @@ public class BoardDAO {
 					String r_dt = rs.getNString("r_dt");
 					String nm = rs.getNString("nm");
 					int c_like = rs.getInt("c_like");
+					int c_cmt = rs.getInt("c_cmt");
 					
 					BoardVO vo = new BoardVO();
 					vo.setI_board(i_board);
@@ -47,6 +58,7 @@ public class BoardDAO {
 					vo.setNm(nm);
 					vo.setR_dt(r_dt);
 					vo.setC_like(c_like);
+					vo.setC_cmt(c_cmt);
 					
 					list.add(vo);
 				}
@@ -245,4 +257,30 @@ public class BoardDAO {
 		
 		return list;
 	}
+	
+	////////////////////////paging///////////////////////////
+	
+	//페이징 숫자 가져오기
+	public static int selPagingCnt(final BoardVO param) {
+		String sql = "select ceil(count(i_board) / ?) from t_board4";
+		
+		return JdbcTemplate.executeQuery(sql, new JdbcSelectInterface() {
+
+			@Override
+			public void prepared(PreparedStatement ps) throws SQLException { 
+				ps.setInt(1, param.getRecord_cnt());
+			}
+
+			@Override
+			public int executeQuery(ResultSet rs) throws SQLException {
+				if(rs.next()) {
+					return rs.getInt(1);				//스칼라값일때는 인덱스 써서 가져오는것도 괜찮음.(1번째 나오는 값)
+				}
+				return 0;
+			}
+		});
+	}
+	
+	
 }
+	

@@ -38,12 +38,10 @@ public class BoardCmtSer extends HttpServlet {
 		String strI_cmt = request.getParameter("i_cmt");
 		String cmt = request.getParameter("cmt");
 		String i_board = request.getParameter("i_board");
-		
 		UserVO loginUser = MyUtils.getLoginUser(request);
 		
 		BoardCmtVO vo = new BoardCmtVO();
 		
-		vo.setI_cmt(Integer.parseInt(strI_cmt));
 		vo.setCmt(cmt);
 		vo.setI_user(loginUser.getI_user());
 		
@@ -53,6 +51,7 @@ public class BoardCmtSer extends HttpServlet {
 			BoardCmtDAO.insCmt(vo);
 			break;
 		default:			//수정
+			vo.setI_cmt(Integer.parseInt(strI_cmt));
 			BoardCmtDAO.updCmt(vo);
 			break;
 		}

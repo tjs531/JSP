@@ -146,10 +146,12 @@ a {
 				<input type="hidden" name="i_board" value="${vo.i_board}">
 				<div>
 					<input type="text" name="cmt" id="cmttext" placeholder="댓글내용">
-					<input type="submit" value="전송">
+					<input type="submit" id="cmtSubmit" value="전송">
+					<input type="button" value="취소" onclick="clkCmtCancel()">
 				</div>
 			</form>
 		</div>
+		
 		<div class="cmt">
 			댓글 리스트
 			<table>
@@ -158,12 +160,12 @@ a {
 						<th id="cmt_count">${status.count}</th>
 						<td id="cmt_cmt">${cmt.cmt}</td>
 						<td id="cmt_nm">${cmt.nm} </td>
-						<td id="cmt_r_dt">${cmt.r_dt}</td>
+						<td id="cmt_r_dt">${cmt.r_dt==cmt.m_dt ? cmt.r_dt : cmt.m_dt }</td>
 						
 						<td> 
 							<c:if test="${loginUser.i_user == cmt.i_user}">
 									<a id="updcmt" href="#" onclick="updateCmt('${cmt.cmt}','${cmt.i_cmt }')">수정</a>
-									<a href="/board/cmt?i_cmt=${cmt.i_cmt}&i_board=${vo.i_board}">삭제</a>
+									<a href="#" onclick="cmtdel(${cmt.i_cmt})">삭제</a>
 							</c:if>
 						</td>
 					</tr>
@@ -188,10 +190,21 @@ a {
 		}
 		
 		function updateCmt(text,i_cmt){
-			cmttext.setAttribute('value',text);
-			var upd = document.getElementById('updvalue');
-			updvalue.setAttribute('value',i_cmt);
+			cmtFrm.i_cmt.value=i_cmt;
+			cmttext.value=text;
+			cmtSubmit.value='수정';
+		}
 		
+		function clkCmtCancel(){
+			cmtFrm.i_cmt.value = 0;
+			cmtFrm.cmt.value = '';
+			cmtSubmit.value='전송';
+		}
+		
+		function cmtdel(i_cmt){
+			if(confirm("삭제하시겠습니까?")) {
+				location.href="/board/cmt?i_cmt=" + i_cmt + "&i_board=${vo.i_board}";
+			}
 		}
 	</script>
 </body>

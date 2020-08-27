@@ -26,7 +26,7 @@ public class BoardCmtDAO {
 	}
 	
 	public static int updCmt(BoardCmtVO param) {
-		String sql = "update t_board4_cmt set cmt=?, m_dt=sysdate where i_cmt=?";
+		String sql = "update t_board4_cmt set cmt=?, m_dt=sysdate where i_cmt=? and i_user=?";
 
 		return JdbcTemplate.executeUpdate(sql, new JdbcUpdateInterface() {
 
@@ -34,6 +34,7 @@ public class BoardCmtDAO {
 			public void update(PreparedStatement ps) throws SQLException {
 				ps.setNString(1, param.getCmt());
 				ps.setInt(2, param.getI_cmt());
+				ps.setInt(3, param.getI_user());
 			}
 		});
 	}
@@ -54,7 +55,7 @@ public class BoardCmtDAO {
 	public static List<BoardCmtVO> selCmtList(BoardVO param) {
 		final List<BoardCmtVO> list = new ArrayList();			//레퍼런스변수에 final 붙이면 '주소값'을 변경할 수 없다. (그 안에 값을 넣고 빼고 하는건 가능)
 		
-		String sql = "select A.i_cmt, A.i_user, A.cmt, B.nm, A.r_dt from t_board4_cmt A LEFT JOIN t_user B on A.i_user = B.i_user where A.i_board = ? order by i_cmt";
+		String sql = "select A.i_cmt, A.i_user, A.cmt, B.nm, A.r_dt, A.m_dt from t_board4_cmt A LEFT JOIN t_user B on A.i_user = B.i_user where A.i_board = ? order by i_cmt";
 		
 		JdbcTemplate.executeQuery(sql, new JdbcSelectInterface() {
 
@@ -71,6 +72,7 @@ public class BoardCmtDAO {
 					String cmt = rs.getNString("cmt");
 					String nm = rs.getNString("nm");
 					String r_dt = rs.getNString("r_dt");
+					String m_dt = rs.getNString("m_dt");
 					
 					BoardCmtVO vo = new BoardCmtVO();
 					
@@ -79,6 +81,7 @@ public class BoardCmtDAO {
 					vo.setCmt(cmt);
 					vo.setNm(nm);
 					vo.setR_dt(r_dt);
+					vo.setM_dt(m_dt);
 					
 					list.add(vo);
 				}

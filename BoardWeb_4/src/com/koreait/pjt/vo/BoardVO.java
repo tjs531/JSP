@@ -11,7 +11,11 @@ public class BoardVO {
 	private String m_dt;
 	private int yn_like;
 	private int yn_hate;
-	private int c_like;
+	private int c_like;					//좋아요 수
+	private int c_cmt;					//댓글 수
+	private int record_cnt;				//페이지 당 레코드 수(글 수)
+	private int eldx;
+	private int sldx;
 	
 	public String getNm() {
 		return nm;
@@ -79,6 +83,31 @@ public class BoardVO {
 	}
 	public void setC_like(int c_like) {
 		this.c_like = c_like;
+	}
+	
+	public int getC_cmt() {
+		return c_cmt;
+	}
+	public void setC_cmt(int c_cmt) {
+		this.c_cmt = c_cmt;
+	}
+	public int getRecord_cnt() {
+		return record_cnt;
+	}
+	public void setRecord_cnt(int record_cnt) {
+		this.record_cnt = record_cnt;
+	}
+	public int getEldx() {
+		return eldx;
+	}
+	public void setEldx(int eldx) {
+		this.eldx = eldx;
+	}
+	public int getSldx() {
+		return sldx;
+	}
+	public void setSldx(int sldx) {
+		this.sldx = sldx;
 	}
 	
 	
