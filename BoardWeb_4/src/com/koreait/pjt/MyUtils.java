@@ -50,16 +50,14 @@ public class MyUtils {
 		return (UserVO)hs.getAttribute(Const.LOGIN_USER);
 	}
 	
-	  public static int parseStrToInt(String str, int n) {
-	      int num = n;
-	      try {
-	         num = Integer.parseInt(str);
-	      } catch (Exception e) {
-	         
-	      }
+	public static int parseStrToInt(String str, int n) {
+	    int num = n;
+	    try {
+	       num = Integer.parseInt(str);
+	    } catch (Exception e) {}
 	      
 	      return num;
-	   }
+	 }
 	   
 	   public static int parseStrToInt(String str) {
 	      int num = 0;
@@ -71,7 +69,6 @@ public class MyUtils {
 	      
 	      return num;
 	   }
-	
 	
 	   public static int getIntParameter(HttpServletRequest request, String keyNm) {
 		      return parseStrToInt(request.getParameter(keyNm));

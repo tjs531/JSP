@@ -27,12 +27,12 @@ public class BoardListSer extends HttpServlet {
 		int page = MyUtils.getIntParameter(request, "page");
 		page = (page==0) ? 1 : page;
 		
-		
 		BoardVO param= new BoardVO();
 		param.setRecord_cnt(Const.RECORD_CNT); //한 페이지 당 20개 뿌리겠다.
-		param.setEldx(page * Const.RECORD_CNT);
-		param.setSldx(param.getEldx() - Const.RECORD_CNT);
+		param.setEldx(page * param.getRecord_cnt());
+		param.setSldx(param.getEldx() - param.getRecord_cnt());
 		
+		request.setAttribute("page", page);
 		request.setAttribute("pagingCnt", BoardDAO.selPagingCnt(param));
 		request.setAttribute("list",  BoardDAO.selBoardList(param));
 		ViewResolver.forwardLoginChk("board/list", request, response);
