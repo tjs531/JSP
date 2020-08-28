@@ -21,8 +21,6 @@ import com.koreait.pjt.vo.BoardVO;
 import com.koreait.pjt.vo.UserVO;
 import com.koreait.pjt.vo.BoardCmtVO;
 
-
-
 @WebServlet("/board/detail")
 public class BoardDetailSer extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -30,6 +28,7 @@ public class BoardDetailSer extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		UserVO loginUser = MyUtils.getLoginUser(request);
+		HttpSession hs = (HttpSession)request.getSession();
 		
 		if(loginUser == null) {
 			response.sendRedirect("/login");
@@ -37,6 +36,7 @@ public class BoardDetailSer extends HttpServlet {
 		}
 		
 		String i_board = request.getParameter("i_board");
+
 		//ServletContext application = getServletContext();
 		//Integer readI_user = (Integer)application.getAttribute("read_" + i_board);		//int는 null을 변환하면 에러터지지만 Integer는 괜찮음.(객체형)
 		

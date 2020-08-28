@@ -130,7 +130,7 @@ a {
 
 		</div>
 		<div class="menu">
-			<a href="/board/list" id="tolist">리스트로</a>
+			<a href="/board/list?page=${param.page }&record_cnt=${param.record_cnt}&searchText=${param.searchText}" id="tolist">리스트로</a>
 			<c:if test="${loginUser.i_user == vo.i_user }">
 				<a href="/board/regmod?i_board=${vo.i_board}">수정</a>
 				<form id="delFrm" action="/board/del" method="post">
@@ -186,7 +186,7 @@ a {
 		}
 		
 		function toggleLike(yn_like){
-			location.href="/board/toggleLike?i_board=${vo.i_board}&yn_like="+yn_like;
+			location.href="/board/toggleLike?i_board=${vo.i_board}&yn_like="+yn_like+"&page=${param.page}&record_cnt=${param.record_cnt}&searchText=${searchText}";
 		}
 		
 		function updateCmt(text,i_cmt){

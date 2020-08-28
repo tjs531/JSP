@@ -15,28 +15,39 @@
 	a {text-decoration:none;}
 	#logout { color:red; font-size:0.8em;}
 	table {border-collapse: collapse; text-align:center; width:1000px; margin: 0 auto; margin-bottom:10px;}
-	table th, td{border:1px solid black; height: 30px;}
+	table th, td{border:1px solid #ccc; height: 30px;}
 	th {background-color:#DBC9EC;}
 	.itemRow:hover {cursor : pointer; background-color:#F0E9F7;}
-	#list {display: inline-block;}
-	#btn {width:1000px; height:30px; margin-bottom: 10px; border-radius: 20px; border:none; background-color:#DBC9EC;}
+	#list h1 {display: inline-block; margin-left:340px; margin-top: 50px;}
+	#btn {width:100px; height:30px; margin-bottom: 20px; margin-top:15px; margin-left: 850px; border-radius: 20px; border:none; background-color:#DBC9EC;}
+	#btn:hover {cursor:pointer;}
 	#page {font-size:1.2em;}
 	#c_page {color:red; pointer-events: none; font-weight:bold; font-size:1.2em}
+	#selFrm {margin-bottom: 20px; display: inline-block; margin-left: 200px;}
+	#search {margin-left : 170px;display:inline-block;}
+	#searchText {width:200px;}
+	#selectFrm {display:inline-block;}
+	.fontCenter {margin-left: 440px; margin-top:20px;}
 </style>
 </head>
 <body>
 	<div class="container">
-		<div><span id="name">${loginUser.nm}</span>님 환영합니다! <a href="/logout" id="logout">로그아웃</a></div>
+		<div><span id="name">${loginUser.nm}</span>님 환영합니다! 
+		<a href="/profile">프로필</a>
+		<a href="/logout" id="logout">로그아웃</a></div>
 		
-		<div id="list"><h1>💃어서오십쇼🤸‍♀️</h1> </div>
-		<div>
+		<div id="list"><h1>💃어서오십쇼🤸‍♀️</h1> 
+	
 			<form id="selFrm" action="/board/list" method="get">	<!-- param. : request.getParameter()을 줄여서 표현한 것. (request.getParameter("page")  =  param.page) -->
-				<input type="hidden" name="page" value="${param.page == null? 1: param.page }">
+				<input type="hidden" name="page" value="${page}">
+				<input type="hidden" name="searchText" value=${param.searchText }>
+		
+				<div >
 				레코드 수:
-				<select name="record_cnt" onchange="changeRecord()">
-					<c:forEach begin="10" end="50" step="10" var="item">
+				<select id="selectFrm" name="record_cnt" onchange="changeRecord()">
+					<c:forEach begin="10" end="30" step="10" var="item">
 						<c:choose>
-							<c:when test="${param.record_cnt == item || (param.record_cnt == null && item == 10) }">
+							<c:when test="${param.record_cnt == item }">
 								<option value="${item }" selected>${item}개</option>
 							</c:when>
 							<c:otherwise>
@@ -45,6 +56,7 @@
 						</c:choose>
 					</c:forEach>
 				</select>
+				</div>
 			</form>
 		</div>
 
@@ -73,10 +85,20 @@
 			</c:forEach>
 		</table>
 		
+		
 		<div class="fontCenter">
 			<c:forEach var="i" begin="1" end="${pagingCnt }">
-				<span><a href="/board/list?page=${i}" id="${i==page ? 'c_page' : 'page'}" >${i}</a></span>
+				<span><a href="/board/list?page=${i}&record_cnt=${param.record_cnt}&searchText=${param.searchText}" id="${i==page ? 'c_page' : 'page'}" >${i}</a></span>
 			</c:forEach>
+			
+			
+			<div id="search">
+			<form action="/board/list">
+				<input id="searchText" type="search" name="searchText">
+				<input type="hidden" name="record_cnt" value=${param.record_cnt }>
+				<input type="submit" value="검색">
+			</form>
+		</div>
 		</div>
 	</div>
 	
@@ -87,7 +109,7 @@
 			
 		}
 		function todetail(i_board){
-			location.href='/board/detail?i_board=' + i_board
+			location.href='/board/detail?i_board=' + i_board + '&page=${page}&record_cnt=${param.record_cnt}&searchText=${param.searchText}';
 		}
 		
 		function toregmod(){

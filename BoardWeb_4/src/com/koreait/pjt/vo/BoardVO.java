@@ -16,6 +16,7 @@ public class BoardVO {
 	private int record_cnt;				//페이지 당 레코드 수(글 수)
 	private int eldx;
 	private int sldx;
+	private String searchText;
 	
 	public String getNm() {
 		return nm;
@@ -108,6 +109,12 @@ public class BoardVO {
 	}
 	public void setSldx(int sldx) {
 		this.sldx = sldx;
+	}
+	public String getSearchText() {
+		return searchText;
+	}
+	public void setSearchText(String searchText) {
+		this.searchText = searchText;
 	}
 	
 	

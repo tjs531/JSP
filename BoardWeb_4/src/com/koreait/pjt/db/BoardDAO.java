@@ -27,6 +27,7 @@ public class BoardDAO {
 				+ " NVL((select count(i_cmt) from t_board4_cmt group by i_board having i_board=A.i_board),0) as c_cmt "
 				+ " from t_board4 A, t_user B "
 				+ " where A.i_user = B.i_user "
+				+ " and a.title like ? "
 				+ " order by A.i_board desc) A where rownum<=? ) A where a.rnum>?";
 		
 		
@@ -34,8 +35,9 @@ public class BoardDAO {
 
 			@Override
 			public void prepared(PreparedStatement ps) throws SQLException { 
-				ps.setInt(1, param.getEldx());
-				ps.setInt(2, param.getSldx());
+				ps.setNString(1, param.getSearchText());
+				ps.setInt(2, param.getEldx());
+				ps.setInt(3, param.getSldx());
 			}
 
 			@Override
@@ -262,13 +264,15 @@ public class BoardDAO {
 	
 	//페이징 숫자 가져오기
 	public static int selPagingCnt(final BoardVO param) {
-		String sql = "select ceil(count(i_board) / ?) from t_board4";
+		String sql = "select ceil(count(i_board) / ?) from t_board4 "
+				+ " Where title like ? ";
 		
 		return JdbcTemplate.executeQuery(sql, new JdbcSelectInterface() {
 
 			@Override
 			public void prepared(PreparedStatement ps) throws SQLException { 
 				ps.setInt(1, param.getRecord_cnt());
+				ps.setNString(2, param.getSearchText());
 			}
 
 			@Override

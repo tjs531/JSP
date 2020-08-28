@@ -24,17 +24,41 @@ public class BoardListSer extends HttpServlet {
        
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
+		HttpSession hs = (HttpSession)request.getSession();
+		
+		String searchText = request.getParameter("searchText");
+		searchText = (searchText == null ? "" : searchText);
+		
 		int page = MyUtils.getIntParameter(request, "page");
-		page = (page==0) ? 1 : page;
+		page = (page==0 ? 1 : page);
+		
+		int recordCnt = MyUtils.getIntParameter(request, "record_cnt");
+		recordCnt = (recordCnt == 0? 10: recordCnt);
 		
 		BoardVO param= new BoardVO();
-		param.setRecord_cnt(Const.RECORD_CNT); //한 페이지 당 20개 뿌리겠다.
-		param.setEldx(page * param.getRecord_cnt());
-		param.setSldx(param.getEldx() - param.getRecord_cnt());
+		param.setRecord_cnt(recordCnt); //한 페이지 당 뿌리는 갯수
+		param.setSearchText("%"+ searchText + "%");
 		
+		int pagingCnt = BoardDAO.selPagingCnt(param);			//페이지 개수
+		
+		if(pagingCnt < page) {
+			page = pagingCnt;
+		}
+		
+		int eIdx = page * recordCnt;
+		int sIdx = eIdx - recordCnt;
+		
+		param.setSldx(sIdx);
+		param.setEldx(eIdx);
+		
+		hs.setAttribute("searchText", searchText);
+
 		request.setAttribute("page", page);
-		request.setAttribute("pagingCnt", BoardDAO.selPagingCnt(param));
+		request.setAttribute("pagingCnt", pagingCnt);
 		request.setAttribute("list",  BoardDAO.selBoardList(param));
+		
+		//hs.setAttribute("recordCnt", recordCnt);
+
 		ViewResolver.forwardLoginChk("board/list", request, response);
 	}
 }
