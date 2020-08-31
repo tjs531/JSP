@@ -11,6 +11,7 @@
 <title>List</title>
 <style>
 	.container {text-align:center;}
+	.head {margin-bottom:20px;}
 	#name {font-weight:bold;}
 	a {text-decoration:none;}
 	#logout { color:red; font-size:0.8em;}
@@ -18,7 +19,7 @@
 	table th, td{border:1px solid #ccc; height: 30px;}
 	th {background-color:#DBC9EC;}
 	.itemRow:hover {cursor : pointer; background-color:#F0E9F7;}
-	#list h1 {display: inline-block; margin-left:340px; margin-top: 50px;}
+	#list h1 {display: inline-block; margin-left:340px; margin:30px auto; padding-left : 350px;}
 	#btn {width:100px; height:30px; margin-bottom: 20px; margin-top:15px; margin-left: 850px; border-radius: 20px; border:none; background-color:#DBC9EC;}
 	#btn:hover {cursor:pointer;}
 	#page {font-size:1.2em;}
@@ -32,7 +33,7 @@
 </head>
 <body>
 	<div class="container">
-		<div><span id="name">${loginUser.nm}</span>님 환영합니다! 
+		<div class="head"><span id="name">${loginUser.nm}</span>님 환영합니다! 
 		<a href="/profile">프로필</a>
 		<a href="/logout" id="logout">로그아웃</a></div>
 		
@@ -42,7 +43,7 @@
 				<input type="hidden" name="page" value="${page}">
 				<input type="hidden" name="searchText" value=${param.searchText }>
 		
-				<div >
+				<div>
 				레코드 수:
 				<select id="selectFrm" name="record_cnt" onchange="changeRecord()">
 					<c:forEach begin="10" end="30" step="10" var="item">

@@ -18,8 +18,8 @@
 }
 
 .content {
+	width:100%;
 	margin: 5px auto;
-	width: 500px;
 	line-height: 30px;
 }
 
@@ -55,10 +55,15 @@ a {
 }
 
 #ctnt {
+	width: 40%;
 	font-size: 1.1em;
+	margin: 5px auto;
 	background-color: #F0E9F7;
 	padding: 50px;
 	border-radius: 20%;
+}
+#ctnt>img{
+	width:80%;
 }
 
 .sub {
