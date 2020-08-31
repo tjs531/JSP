@@ -37,25 +37,28 @@
 				alert('아이디는 5글자 이상이어야합니다.');
 				frm.user_id.focus();
 				return false;
-			} else if(frm.user_pw.value.length < 5){
+			} 
+			if(frm.user_pw.value.length < 5){
 				alert('비밀번호는 5글자 이상이어야합니다.');
 				frm.user_pw.focus();
 				return false;
-			} else if(frm.user_pw.value != frm.user_pwre.value){
+			} 
+			if(frm.user_pw.value != frm.user_pwre.value){
 				alert('비밀번호를 확인해주세요'); 
 				frm.user_pw.focus();
 				return false;
-			} else if(korean.test(frm.nm.value)){				//한글 정규식을 만족하지 않을 경우.(이름에 한글이 아닌 문자가 있을 경우)
+			} 
+			if(korean.test(frm.nm.value)){				//한글 정규식을 만족하지 않을 경우.(이름에 한글이 아닌 문자가 있을 경우)
 				alert('이름을 다시 입력해주세요');
 				frm.nm.focus();
 				return false;
-			} else if(!email.test(frm.email.value)){			//이메일 정규식을 만족하지 않을 경우.
+			} 
+			if(!email.test(frm.email.value)){			//이메일 정규식을 만족하지 않을 경우.
 				alert('이메일을 확인해주세요');
 				frm.email.focus();
 				return false;
 			}
-			
-			return true;
+		
 		}
 	</script>
 </body>
